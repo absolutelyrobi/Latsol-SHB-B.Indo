@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Simulasi SHB Bahasa Indonesia Kelas 10</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          animation: {
+            'fade-in-up': 'fadeInUp 0.5s ease-out',
+          },
+          keyframes: {
+            fadeInUp: {
+              '0%': { opacity: '0', transform: 'translateY(20px)' },
+              '100%': { opacity: '1', transform: 'translateY(0)' },
+            }
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-slate-900 text-slate-100 font-sans min-h-screen">
+
+  <!-- ================= SCREEN: START ================= -->
+  <div id="screen-start" class="min-h-screen flex flex-col items-center justify-center p-6">
+    <div class="max-w-3xl w-full bg-slate-800 p-8 md:p-12 rounded-2xl shadow-2xl text-center border border-slate-700 relative overflow-hidden">
+      <div class="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500"></div>
+      
+      <div class="mb-6 flex justify-center">
+         <svg class="w-20 h-20 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
+      </div>
+      
+      <h1 class="text-3xl md:text-5xl font-extrabold mb-4 tracking-tight text-white">
+        Simulasi Latihan SHB
+      </h1>
+      <h2 class="text-lg md:text-xl text-indigo-300 font-semibold mb-6">
+        Bahasa Indonesia | Kelas 10
+      </h2>
+      
+      <div class="bg-slate-700/50 rounded-xl p-6 mb-8 text-left max-w-xl mx-auto border border-slate-600">
+        <h3 class="font-bold text-white mb-3">📋 Instruksi Latihan:</h3>
+        <ul class="list-disc pl-5 space-y-2 text-slate-300">
+          <li>Terdiri dari <strong>40 Soal Pilihan Ganda</strong> dan <strong>5 Soal Uraian</strong>.</li>
+          <li>Soal berbasis stimulus bacaan (Teks Negosiasi, Biografi, & Rekon).</li>
+          <li>Terdapat pembahasan otomatis setelah menjawab setiap soal pilihan ganda.</li>
+          <li>Pastikan membaca teks stimulus dengan saksama.</li>
+        </ul>
+      </div>
+
+      <button onclick="startQuiz()" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-4 px-10 rounded-full text-lg shadow-lg shadow-indigo-500/30 transition transform hover:-translate-y-1">
+        Mulai Latihan Sekarang
+      </button>
+    </div>
+  </div>
+
+  <!-- ================= SCREEN: QUIZ ================= -->
+  <div id="screen-quiz" class="hidden min-h-screen py-8 px-4">
+    <div class="max-w-4xl mx-auto">
+      
+      <!-- Header & Progress -->
+      <div class="mb-6 flex items-center justify-between">
+        <div>
+          <span id="quiz-category" class="text-xs font-bold uppercase tracking-wider text-indigo-400 bg-indigo-900/30 px-3 py-1 rounded-full">
+            Kategori
+          </span>
+        </div>
+        <div id="quiz-progress-text" class="text-sm font-semibold text-slate-400">
+          Soal 1 / 40
+        </div>
+      </div>
+      <div class="w-full bg-slate-800 rounded-full h-2 mb-8 overflow-hidden">
+        <div id="quiz-progress-bar" class="bg-gradient-to-r from-blue-500 to-indigo-500 h-2 rounded-full transition-all duration-300 ease-out" style="width: 0%"></div>
+      </div>
+
+      <!-- Main Card -->
+      <div class="bg-slate-800 border border-slate-700 rounded-2xl shadow-xl overflow-hidden mb-6">
+        
+        <!-- Stimulus Box -->
+        <div class="bg-slate-700/30 p-5 md:p-8 border-b border-slate-700 text-slate-300">
+          <div class="flex gap-3 mb-3 items-center">
+            <svg class="w-5 h-5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+            <h3 class="font-semibold text-white">Teks Stimulus</h3>
+          </div>
+          <p id="quiz-stimulus" class="whitespace-pre-wrap leading-relaxed text-sm md:text-base"></p>
+        </div>
+
+        <!-- Question Box -->
+        <div class="p-5 md:p-8">
+          <h2 id="quiz-question" class="text-xl md:text-2xl font-semibold mb-6 leading-snug text-white">
+            Pertanyaan
+          </h2>
+
+          <!-- Options -->
+          <div id="quiz-options" class="space-y-3">
+            <!-- Options will be injected here -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Feedback & Next Button -->
+      <div id="quiz-feedback-container" class="hidden animate-fade-in-up">
+        <div id="quiz-feedback-box" class="p-6 rounded-2xl border mb-6">
+          <div class="flex items-center gap-3 mb-2">
+            <div id="quiz-feedback-icon"></div>
+            <h3 id="quiz-feedback-title" class="font-bold text-lg"></h3>
+          </div>
+          <div class="pl-10">
+            <p id="quiz-feedback-text" class="opacity-90 leading-relaxed text-sm md:text-base"></p>
+          </div>
+        </div>
+
+        <div class="flex justify-end pb-12">
+          <button onclick="handleNextQuestion()" id="quiz-next-btn" class="bg-blue-600 hover:bg-blue-500 text-white px-8 py-3 rounded-full font-bold shadow-lg flex items-center gap-2 transition">
+            Soal Berikutnya
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ================= SCREEN: RESULT ================= -->
+  <div id="screen-result" class="hidden min-h-screen flex flex-col items-center justify-center p-6">
+    <div class="max-w-2xl w-full bg-slate-800 p-8 md:p-12 rounded-3xl shadow-2xl text-center border border-slate-700">
+      
+      <h2 class="text-3xl font-bold mb-8 text-white">Latihan Selesai! 🎉</h2>
+      
+      <div class="relative w-48 h-48 mx-auto mb-8">
+        <svg class="w-full h-full" viewBox="0 0 36 36">
+          <path class="text-slate-700" stroke-width="3" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+          <path id="result-circle" class="text-indigo-500" stroke-dasharray="0, 100" stroke-width="3" stroke-linecap="round" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+        </svg>
+        <div class="absolute inset-0 flex flex-col items-center justify-center">
+          <span id="result-score" class="text-5xl font-black text-white">0</span>
+          <span class="text-sm text-slate-400 mt-1">dari 100</span>
+        </div>
+      </div>
+
+      <div class="bg-slate-700/30 rounded-xl p-6 mb-8 border border-slate-600">
+        <p class="text-lg">
+          Kamu menjawab benar <strong id="result-correct" class="text-emerald-400 text-xl">0</strong> dari <strong id="result-total" class="text-blue-400 text-xl">40</strong> soal Pilihan Ganda.
+        </p>
+        <p id="result-message" class="mt-3 text-slate-400 italic">
+          Message
+        </p>
+      </div>
+
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <button onclick="goToEssay()" class="bg-purple-600 hover:bg-purple-500 text-white font-bold py-3 px-8 rounded-full shadow-lg transition">
+          Lanjut ke Soal Uraian 📝
+        </button>
+        <button onclick="startQuiz()" class="bg-slate-700 hover:bg-slate-600 text-white font-bold py-3 px-8 rounded-full transition">
+          Ulangi Pilihan Ganda 🔄
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= SCREEN: ESSAY ================= -->
+  <div id="screen-essay" class="hidden min-h-screen py-10 px-4">
+    <div class="max-w-4xl mx-auto">
+      <div class="mb-8 flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+          <h2 class="text-3xl font-bold text-white mb-2">Bagian B: Soal Uraian</h2>
+          <p class="text-slate-400">Kerjakan soal-soal berikut dengan cermat dan teliti.</p>
+        </div>
+        <button onclick="toggleEssayAnswers()" id="essay-toggle-btn" class="border border-indigo-500 text-indigo-400 hover:bg-indigo-500/10 px-5 py-2 rounded-full font-medium transition self-start">
+          Lihat Kunci Jawaban
+        </button>
+      </div>
+
+      <div id="essay-container" class="space-y-6">
+        <!-- Essays will be injected here -->
+      </div>
+
+      <div class="mt-10 mb-20 text-center">
+        <button onclick="goHome()" class="bg-slate-700 hover:bg-slate-600 text-white font-bold py-3 px-8 rounded-full transition inline-flex items-center gap-2">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
+          Kembali ke Beranda Utama
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // --- DATA SOAL PILIHAN GANDA DARI PDF LATSOL SHB ---
+    const stimulusSepatu = "Negosiasi Membeli Sepatu\n\nPada Jum'at sore, Eko berkunjung ke sebuah toko hendak membeli sepatu karena sepatu lamanya telah rusak.\n\nEko: \"Mbak, saya sedang mencari sepatu buat santai yang harganya terjangkau. Kira-kira yang mana yah?\"\nPenjual: \"Harga sepatu di sini bermacam-macam, mulai dari harga Rp. 100.000 sampai Rp. 500.000 mas.\"\nEko: \"Bolehkah saya melihat-lihat sepatunya dulu mbak? Siapa tahu model dan warnanya ada yang cocok?\"\nPenjual: \"Mari, di sebelah sini sama saya mas\"\n\nEko pun berjalan mengikuti penjual sambil melihat-lihat sepatu yang berjejer rapi dengan berbagai warna dan merk yang berbeda.\n\nEko: \"Permisi mbak, kalau boleh tahu harga sepatu yang ini berapa?\"\nPenjual: \"Kalau sepatu yang ini harganya Rp. 300.000 mas\"\nEko: \"harganya kok mahal banget ya mbak, apa tidak bisa dinego?\"\nPenjual: \"Sepatu ini kualitasnya bagus, selain itu juga keluaran terbaru, sehingga harganya segitu. Memangnya mau nawar berapa mas?\"\nEko: \"Rp. 200.000 aja mbak sepatunya\"\nPenjual: \"Kalau harga segitu belum boleh mas.\"\nEko: \"Saya tambah Rp. 30.000, jadi Rp. 230.000 bagaimana mbak?\"\nPenjual: \"Maaf mas, belum boleh. Turunnya terlalu banyak. Atau begini saja mas, saya turunkan jadi Rp. 280.000 bagaimana? Itu sudah harga yang paling murah.\"\nEko: \"Turunkan sedikit lagi dong, Rp. 260.000 saja ya.\"\nPenjual: \"Iya deh mas kalau begitu, sepatunya boleh diambil dengan harga segitu\"\n\nPenjual pun membawa sepatu tersebut menuju tempat kasir untuk membayar harga sepatu dan Eko pun mendapatkan sepatu yang diinginkan.";
+    
+    const stimulusSurat = "PT. GILANG KENCANA\nJl. Sudirman No. 45, Jakarta Barat\nJakarta, 10 Februari 2013\n\nNomor: 12/GK/II/2013\nHal: Penawaran Barang Kantor\n\nYth. Direktur PT. Ragarja Semesta\nJl. Merdeka No. 90\nBandung\n\nDengan hormat,\nMelalui surat ini, kami dari PT. Gilang Kencana ingin menawarkan produk mesin kantor unggulan kepada perusahaan yang Bapak/Ibu pimpin. Perusahaan kami merupakan distributor resmi berbagai peralatan operasional perkantoran.\n\nProduk yang kami tawarkan adalah mesin photocopy high speed merek Canon MF-6770. Mesin ini sangat cocok untuk mendukung efisiensi operasional perusahaan berskala besar. Harga yang kami tawarkan adalah Rp6.500.000,00 per unit. Sistem pembayaran yang kami tetapkan adalah pembayaran tunai atau cash on delivery (COD) setelah barang tiba.\n\nBesar harapan kami, perusahaan Saudara tertarik dengan produk yang kami tawarkan dan dapat segera melakukan pemesanan sebelum tanggal 28 Februari 2013. Kami akan memberikan potongan harga sebesar 10% untuk setiap transaksi sebelum batas waktu tersebut.\n\nDemikian surat penawaran ini kami sampaikan. Atas perhatian dan kerja sama Bapak/Ibu, kami ucapkan terima kasih.\n\nHormat kami,\nBudi Santoso\nManajer Pemasaran";
+
+    const stimulusSardjito = "Keberadaan Rumah Sakit Umum Pusat Dr. Sardjito di Yogyakarta bukanlah tanpa alasan. Nama Prof. Dr. Sardjito disematkan sebagai nama rumah sakit atas dedikasinya dalam bidang pendidikan dan kesehatan pada era perjuangan kemerdekaan. Sardjito merupakan putra dari seorang guru bernama Sajit. Sardjito lahir pada tanggal 13 Agustus 1889 di Desa Purwodadi, Kabupaten Magetan, Jawa Timur. Pada tahun 1907 Sardjito menyelesaikan pendidikan formalnya di Sekolah Belanda Lumajang.\n\nSetelah itu, Sardjito melanjutkan pendidikan di STOVIA, Jakarta, dan berhasil lulus pada tahun 1915. Lulus dari Stovia, ia bekerja sebagai dokter di Rumah Sakit Jakarta selama kurang satu tahun, lalu pindah ke Institut Pasteur Bandung sampai tahun 1920. Jiwa Sardjito sebagai seorang peneliti berkembang ketika ia mengikuti tim penelitian khusus di influenza di Institut Pasteur.\n\nSebagai seorang dokter, Sardjito telah mencatat penemuan-penemuan yang bermanfaat bagi masyarakat, di antaranya, obat penyakit batu ginjal (Calcusol), dan obat penurun kolestrol (Calterol). Ia menekankan agar kedua obat tersebut tidak dijual mahal. \"Tidak boleh menjual obat ini mahal-mahal. Obat ini untuk rakyat. Banyak rakyat yang menderita penyakit batu ginjal. Kasihan kalau mereka harus operasi,\" ujar Sardjito.\n\nPada masa revolusi kemerdekaan, Sardjito telah memberikan kontribusi nyata dalam membantu para pejuang kemerdekaan. Sardjito menciptakan makanan ransum bernama Biskuit Sardjito untuk para tentara pelajar yang sedang berjuang di medan perang. Ia juga menciptakan vaksin anti penyakit infeksi untuk Typus, Kolera, Disentri, Staflokoken dan Streptokoken...\n\nSardjito merupakan perintis serta rektor pertama Universitas Gadjah Mada (UGM) tahun 1950-1961, lalu menjabat sebagai rektor Universitas Islam Indonesia (UII) pada tahun 1961-1970. Ia merupakan peneliti yang menggunakan pendekatan multidisipliner. Hal itu dibuktikan dengan karyanya berjudul \"The Occurence in Indonesia...\"";
+
+    const stimulusBanjir = "Awal tahun 2024 menjadi momen yang sulit dilupakan bagi warga Jakarta. Selama tiga hari berturut-turut, hujan deras mengguyur tanpa henti. Air dari sungai-sungai utama meluap hingga menenggelamkan sejumlah permukiman di pinggiran kota. Pemerintah bersama para relawan langsung turun tangan untuk memantau situasi dan membantu warga yang terdampak.\n\nPada hari pertama, hujan mulai turun deras sejak petang dan terus berlanjut hingga tengah malam. Sekitar pukul dua dini hari, air sungai meluap dan mulai memasuki rumah warga. Banyak orang terbangun panik karena air sudah setinggi lutut orang dewasa.\n\nPagi harinya, tim pemadam kebakaran dan petugas BPBD datang membawa perahu karet untuk mengevakuasi warga. Sekolah-sekolah dan masjid di sekitar lokasi dijadikan tempat pengungsian sementara. Beberapa warga masih sempat menyelamatkan barang berharga, tapi banyak juga yang harus rela kehilangan harta bendanya.\n\nMenjelang siang, genangan air semakin meluas hingga menutupi jalan-jalan utama. Lalu lintas lumpuh total. Bantuan logistik dari kota sekitar mulai berdatangan-makanan siap saji, air mineral, hingga selimut untuk para pengungsi. Malam harinya, petugas terus berjaga dan berpatroli, memastikan tidak ada warga yang masih terjebak di rumahnya.";
+
+    const stimulusHabibie = "Prof. DR (HC). Ing. Dr. Sc. Mult. Bacharuddin Jusuf Habibie atau dikenal sebagai B.J. Habibie (73 tahun) merupakan pria Pare-Pare (Sulawesi Selatan) kelahiran 25 Juni 1936. Habibie menjadi presiden ke-3 Indonesia selama 1.4 tahun dan 2 bulan menjadi Wakil Presiden RI ke-7. Habibie merupakan keturunan antara orang Jawa (ibunya) dengan orang Makasar/Pare-Pare (ayahnya). Di masa kecil, Habibie telah menunjukkan kecerdasan dan semangat tinggi pada ilmu pengetahuan dan teknologi khususnya Fisika. Selama enam bulan, ia kuliah di Teknik Mesin Institut Teknologi Bandung (ITB), dan dilanjutkan ke Rhenisch Wesfalische Tehnische Hochscule-Jerman pada 1955. Dengan dibiayai oleh ibunya, R.A. Tuti Marini Puspowardoyo, Habibie muda menghabiskan 10 tahun untuk menyelesaikan studi S-1 hingga S-3 di Aachen-Jerman.";
+
+    const stimulusSuratDialog = "Teks A (Surat)\nPT Indomakmur Jaya\n17 Januari 2024\nYth. Bapak Abu Sofyan\nDirektur PT. Cahaya Gemilang Sakti\n\nSalam Hormat. Kami dari PT Indomakmur Jaya ingin menyampaikan apresiasi atas minat dan kesediaan Anda untuk menjajaki kemungkinan kerja sama antara perusahaan Anda dengan kami... Adapun hal-hal yang ingin kami diskusikan adalah terkait dengan syarat-syarat kontrak, spesifikasi produk/jasa yang ditawarkan, dan juga kemungkinan penyesuaian harga atau kuantitas yang lebih menguntungkan bagi kedua belah pihak...\n\n---\n\nTeks B (Dialog)\nBapak Taufik: \"Assalamualaikum, Pak Ari, Pak Acong.\"\nBapak Ari: \"Waalaikumsalam, Pak Roni, Pak Taufik. Mari silakan duduk.\"\nBapak Taufik: \"Bagaimana kabarnya, Pak? Sehat?\"\nBapak Ari: \"Sehat Pak... Ada apa ya, Pak?\"\nBapak Taufik: \"...Tujuan saya kesini karena menemani Bapak Roni yang katanya Bapak Ari mau menjual rumah ini...\"\nBapak Roni: \"Kebetulan saya memang berminat dengan rumah yang Bapak jual...\"\nBapak Acong: \"Jadi begini Pak Roni, urusan jual beli rumah ini sudah diserahkan ke saya...\"\nBapak Roni: \"Rumah ini harganya berapa, Pak?\"\nBapak Acong: \"Untuk luasan tanahnya 300 m dan luas rumahnya sebesar 200 meter. Rumah ini pun habis renovasi... Kalau buat bapak saya menawarkan Rp2 miliar saja.\"\nBapak Roni: \"Wah, lumayan juga, Pak. Saya kira harganya gak sampe menyentuh Rp2 miliar.\"";
+
+    const stimulusGambyong = "Tari Gambyong sebagai Wujud Ungkapan Selamat Datang Masyarakat Indonesia\nSeni tari adalah sebuah seni yang mempelajari tentang gerakan tubuh yang berirama dan berkesinambungan, dilakukan di waktu dan tempat tertentu. Tari tradisional adalah suatu tarian yang pada dasarnya berkembang di suatu daerah tertentu yang berpedoman luas dan berpijak pada adaptasi kebiasaan secara turun temurun. Di negara Indonesia ada salah satu tari tradisional yang sering digunakan untuk sambutan. Tari ini berasal dari Surakarta yang bernama tari Gambyong.\n\nTari Gambyong sering digunakan sebagai pertunjukan untuk Sinuhun Paku Buwono keenam dan untuk menyambut selamat datang saat ada tamu penting yang mengunjungi keraton Kasunanan Surakarta. Gerakan-gerakan dalam tari Gambyong lebih banyak gerakan di kaki, tangan, tubuh, dan kepala. Dengan gerakan lambat, penari menari dengan anggun, menggambarkan keindahan dan kelembutan seorang wanita.";
+
+    const stimulusSardjito2 = "Mengenal Prof. Sardjito, Cendekiawan Pencipta Vaksin hingga Biskuit Tentara\nKeberadaan Rumah Sakit Umum Pusat Dr. Sardjito di Yogyakarta bukanlah tanpa alasan. Nama Prof. Dr. Sardjito disematkan sebagai nama rumah sakit atas dedikasinya dalam bidang pendidikan dan kesehatan pada era perjuangan kemerdekaan. Sardjito merupakan putra dari seorang guru bernama Sajit. Pada waktu itu influenza menjadi momok permasalahan bagi masyarakat negara Indonesia.\n\nSebagai seorang dokter, Sardjito telah mencatat penemuan-penemuan yang bermanfaat bagi masyarakat di antaranya, obat penyakit batu ginjal (Calcusol), dan obat penurun kolestrol (Calterol). Ia menekankan agar kedua obat tersebut tidak dijual mahal. \"Tidak boleh menjual obat ini mahal-mahal. Obat ini untuk rakyat,\" ujar Sardjito.\n\nPada masa revolusi kemerdekaan, Sardjito telah memberikan kontribusi nyata dalam membantu para pejuang kemerdekaan. Sardjito menciptakan makanan ransum bernama Biskuit Sardjito untuk para tentara pelajar yang sedang berjuang di medan perang. Ia juga menciptakan vaksin anti penyakit infeksi untuk Typus, Kolera, Disentri, Stafilokoken dan Streptokoken.";
+
+    const standaloneText = "Bacalah pertanyaan berikut dan pilihlah jawaban yang paling tepat!";
+
+    const questionsData = [
+      {
+        id: 1, category: "Teks Negosiasi", stimulus: stimulusSepatu,
+        question: "Berapa harga akhir sepatu yang disepakati oleh Eko dan penjual?",
+        options: [
+          { key: "A", text: "Rp200.000" }, { key: "B", text: "Rp230.000" },
+          { key: "C", text: "Rp250.000" }, { key: "D", text: "Rp260.000" }, { key: "E", text: "Rp280.000" }
+        ],
+        correct: "D", explanation: "Disepakati ketika Eko menawar Rp260.000 dan penjual langsung merespons 'Iya deh mas kalau begitu...'."
+      },
+      {
+        id: 2, category: "Teks Negosiasi", stimulus: stimulusSepatu,
+        question: "Bagian mana yang termasuk permintaan dari teks negosiasi tersebut?",
+        options: [
+          { key: "A", text: "Mbak, saya sedang mencari sepatu buat santai yang harganya terjangkau." },
+          { key: "B", text: "Harga sepatu di sini bermacam-macam, mulai dari harga Rp100.000." },
+          { key: "C", text: "Rp200.000 aja mbak sepatunya, karena barangnya terlihat sudah lama." },
+          { key: "D", text: "Sepatu ini kualitasnya bagus, selain itu juga keluaran model terbaru." },
+          { key: "E", text: "Penjual pun membawa sepatu tersebut menuju tempat kasir pembayaran." }
+        ],
+        correct: "A", explanation: "Kalimat tersebut menunjukkan kehendak atau barang apa yang sedang dicari oleh pihak pembeli."
+      },
+      {
+        id: 3, category: "Teks Negosiasi", stimulus: stimulusSepatu,
+        question: "Berikut yang merupakan strategi negosiasi yang digunakan oleh penjual adalah...",
+        options: [
+          { key: "A", text: "Langsung menyetujui tawaran pertama dari pembeli." },
+          { key: "B", text: "Menawarkan kompromi tanpa menyebutkan fungsi barang." },
+          { key: "C", text: "Menjelaskan kualitas produk lalu memberikan kompromi." },
+          { key: "D", text: "Meminta pembeli mencoba semua sepatu yang ada di toko." },
+          { key: "E", text: "Memberikan diskon yang sangat besar di awal percakapan." }
+        ],
+        correct: "C", explanation: "Penjual menolak halus dengan menjelaskan kualitas produk, lalu mencoba memberi harga tengah."
+      },
+      {
+        id: 4, category: "Teks Negosiasi", stimulus: stimulusSepatu,
+        question: "Perhatikan pernyataan-pernyataan berikut ini!\n1. Negosiasi dalam teks berlangsung antara pembeli dan penjual di sebuah toko sepatu.\n2. Harga awal sepatu yang ditawarkan penjual adalah Rp300.000.\n3. Eko berhasil mendapatkan sepatu dengan harga di bawah Rp250.000.\n4. Penjual menurunkan harga karena sepatu tersebut merupakan stok lama.\n5. Kesepakatan harga tercapai setelah beberapa kali proses tawar-menawar.\n\nPernyataan yang benar berdasarkan teks negosiasi di atas ditunjukkan oleh nomor...",
+        options: [
+          { key: "A", text: "1, 2, dan 3" }, { key: "B", text: "1, 2, dan 5" },
+          { key: "C", text: "2, 3, dan 4" }, { key: "D", text: "2, 4, dan 5" }, { key: "E", text: "3, 4, dan 5" }
+        ],
+        correct: "B", explanation: "Eko membeli harga 260 ribu (di atas 250 ribu) sehingga nomor 3 salah. Harga diturunkan karena tawar menawar, bukan karena stok lama (nomor 4 salah)."
+      },
+      {
+        id: 5, category: "Teks Negosiasi", stimulus: standaloneText,
+        question: "Berikut yang tidak termasuk struktur teks negosiasi adalah...",
+        options: [
+          { key: "A", text: "Orientasi" }, { key: "B", text: "Pemenuhan" },
+          { key: "C", text: "Penawaran" }, { key: "D", text: "Persetujuan" }, { key: "E", text: "Pendalaman" }
+        ],
+        correct: "E", explanation: "Pendalaman tidak termasuk dalam urutan struktur. Struktur baku negosiasi: Orientasi, Permintaan, Pemenuhan, Penawaran, Persetujuan, Penutup."
+      },
+      {
+        id: 6, category: "Teks Negosiasi", stimulus: stimulusSurat,
+        question: "Berdasarkan metode penyampaiannya, surat di atas termasuk jenis negosiasi...",
+        options: [
+          { key: "A", text: "Negosiasi dominasi sepihak." }, { key: "B", text: "Negosiasi penyelesaian sengketa." },
+          { key: "C", text: "Negosiasi penawaran" }, { key: "D", text: "Negosiasi penghindaran konflik." }, { key: "E", text: "Negosiasi kompromi perantara." }
+        ],
+        correct: "C", explanation: "Surat tersebut menggunakan narasi penawaran kerja sama yang membuka ruang diskusi untuk keuntungan dua belah pihak."
+      },
+      {
+        id: 7, category: "Teks Negosiasi", stimulus: stimulusSurat,
+        question: "Apa tujuan utama PT. Gilang Kencana mengirimkan surat tersebut?",
+        options: [
+          { key: "A", text: "Meminta PT. Ragarja Semesta segera melunasi utang mesin." },
+          { key: "B", text: "Menawarkan kerja sama pengadaan mesin fotokopi kantor." },
+          { key: "C", text: "Memberitahukan bahwa stok mesin Canon telah habis terjual." },
+          { key: "D", text: "Mengajukan permohonan pembelian alat dari Ragarja Semesta." },
+          { key: "E", text: "Melaporkan kerusakan teknis mesin yang telah dipesan sebelumnya." }
+        ],
+        correct: "B", explanation: "Tujuan utama tercantum jelas di paragraf pengantar yaitu untuk menawarkan kerja sama pengadaan mesin fotokopi."
+      },
+      {
+        id: 8, category: "Teks Negosiasi", stimulus: stimulusSurat,
+        question: "Perhatikan pernyataan berikut mengenai isi surat penawaran tersebut!\n1. Harga mesin yang ditawarkan adalah Rp6.200.000 per unit.\n2. Jenis barang yang ditawarkan adalah mesin photocopy high speed.\n3. Sistem pembayaran yang ditawarkan adalah melalui transfer bank.\n4. PT. Gilang Kencana menawarkan potongan harga sebesar 10%.\n5. Batas waktu pemesanan untuk promo adalah 28 Februari 2013.\n\nPernyataan yang TIDAK sesuai dengan isi surat ditunjukkan oleh nomor...",
+        options: [
+          { key: "A", text: "1 dan 3" }, { key: "B", text: "1, 2, dan 4" },
+          { key: "C", text: "2, 3, dan 5" }, { key: "D", text: "3 dan 4" }, { key: "E", text: "4 dan 5" }
+        ],
+        correct: "A", explanation: "Dalam surat, harga mesin adalah Rp6.500.000 dan pembayarannya tunai/COD, bukan transfer bank."
+      },
+      {
+        id: 9, category: "Teks Negosiasi", stimulus: stimulusSurat,
+        question: "Mengapa PT. Gilang Kencana menetapkan batas waktu pemesanan dalam surat penawarannya?",
+        options: [
+          { key: "A", text: "Menghabiskan stok barang lama yang menumpuk di gudang perusahaan." },
+          { key: "B", text: "Mempercepat proses audit dan penutupan laporan keuangan bulan berjalan." },
+          { key: "C", text: "Menjalankan kebijakan harga khusus yang ditetapkan oleh pemerintah pusat." },
+          { key: "D", text: "Mendorong pihak pembeli agar segera melakukan transaksi pembelian." },
+          { key: "E", text: "Memenuhi permintaan batas waktu dari manajemen PT Ragarja Semesta." }
+        ],
+        correct: "D", explanation: "Diskon berbatas waktu digunakan sebagai strategi mempercepat pengambilan keputusan dari mitra bisnis."
+      },
+      {
+        id: 10, category: "Kaidah Kebahasaan", stimulus: standaloneText,
+        question: "Manakah perbandingan yang benar antara Kalimat Persuasif dengan Kalimat Interogatif?",
+        options: [
+          { key: "A", text: "Interogatif menggunakan 5W+1H, persuasif komponennya selalu berupa fakta." },
+          { key: "B", text: "Interogatif diakhiri titik dua, persuasif cenderung diakhiri tanda titik." },
+          { key: "C", text: "Interogatif dipakai menggali informasi, persuasif dipakai membujuk pihak lain." },
+          { key: "D", text: "Interogatif berisi kata ganti penunjuk, persuasif memakai kata ganti penanya." },
+          { key: "E", text: "Interogatif dan persuasif memiliki tujuan struktural yang sama dalam teks." }
+        ],
+        correct: "C", explanation: "Kalimat interogatif adalah pertanyaan untuk mencari jawaban, sedangkan persuasif bersifat membujuk."
+      },
+      {
+        id: 11, category: "Kaidah Kebahasaan", stimulus: standaloneText,
+        question: "Salah satu bentuk penggunaan kata serapan adalah \"adaptasi\". Manakah pernyataan yang paling tepat terkait proses tersebut?",
+        options: [
+          { key: "A", text: "Mengambil bentuk dan makna bahasa asing secara utuh tanpa perubahan." },
+          { key: "B", text: "Memakai konsep bahasa asing lalu mencari padanan kata aslinya di KBBI." },
+          { key: "C", text: "Menyesuaikan ejaan dan pelafalan kata asing ke dalam kaidah bahasa Indonesia." },
+          { key: "D", text: "Merangkai dua kata asing menjadi satu kata baku baru dalam bahasa Indonesia." },
+          { key: "E", text: "Menerjemahkan istilah asing dengan menggunakan struktur kalimat dari bahasa daerah." }
+        ],
+        correct: "C", explanation: "Adaptasi adalah mengambil konsep makna aslinya, lalu mengubah cara penulisan/ejaannya agar sesuai bahasa Indonesia."
+      },
+      {
+        id: 12, category: "Teks Biografi", stimulus: standaloneText,
+        question: "Perhatikan langkah-langkah menyusun teks biografi berikut!\n1. Menentukan teknik pencarian data\n2. Menentukan tokoh\n3. Mencari data tentang tokoh\n4. Tahap Penyusunan\n5. Memilah data yang relevan\n6. Revisi dan editing\n\nUrutan penyusunan biografi yang sistematis dan benar adalah...",
+        options: [
+          { key: "A", text: "2-1-3-5-4-6" }, { key: "B", text: "2-1-3-4-5-6" },
+          { key: "C", text: "1-2-3-4-5-6" }, { key: "D", text: "1-3-5-6-2-4" }, { key: "E", text: "3-5-2-1-6-4" }
+        ],
+        correct: "A", explanation: "Prosesnya: Tentukan tokoh -> Tentukan teknik -> Cari data -> Pilah data -> Susun -> Revisi."
+      },
+      {
+        id: 13, category: "Teks Biografi", stimulus: stimulusSardjito,
+        question: "Di kota manakah Prof. Dr. Sardjito dilahirkan?",
+        options: [
+          { key: "A", text: "Yogyakarta" }, { key: "B", text: "Lumajang" },
+          { key: "C", text: "Magetan" }, { key: "D", text: "Bandung" }, { key: "E", text: "Jakarta" }
+        ],
+        correct: "C", explanation: "Teks secara spesifik mencatat bahwa tokoh tersebut lahir di Magetan, Jawa Timur."
+      },
+      {
+        id: 14, category: "Teks Biografi", stimulus: stimulusSardjito,
+        question: "Peristiwa apa yang memicu berkembangnya jiwa peneliti Prof. Dr. Sardjito?",
+        options: [
+          { key: "A", text: "Keberhasilannya mengobati pasien batu ginjal di daerah pedalaman." },
+          { key: "B", text: "Keterlibatannya dalam tim penelitian khusus wabah influenza." },
+          { key: "C", text: "Pengalamannya merawat pasien di Rumah Sakit Jakarta." },
+          { key: "D", text: "Pendidikan disiplin yang diajarkan oleh ayahnya sejak kecil." },
+          { key: "E", text: "Arahan dari pengajar medis saat ia menempuh studi di STOVIA." }
+        ],
+        correct: "B", explanation: "Ketertarikannya mulai tumbuh besar ketika ia dilibatkan langsung dalam penelitian influenza di Institut Pasteur."
+      },
+      {
+        id: 15, category: "Teks Biografi", stimulus: stimulusSardjito,
+        question: "Perhatikan pernyataan-pernyataan berikut mengenai kontribusi Prof. Dr. Sardjito!\n1. Menciptakan Biskuit Sardjito sebagai makanan ransum tentara pelajar.\n2. Menemukan vaksin untuk penyakit Typus, Kolera, dan Disentri.\n3. Menjabat sebagai rektor UGM sekaligus rektor UII dalam waktu yang bersamaan.\n4. Memastikan obat temuannya selalu dijual dengan harga sangat murah.\n5. Memindahkan buku sekolah tinggi kedokteran menggunakan pesawat militer.\n\nPernyataan yang paling tepat sesuai teks ditunjukkan oleh nomor...",
+        options: [
+          { key: "A", text: "1, 2, dan 3" }, { key: "B", text: "1, 3, dan 4" },
+          { key: "C", text: "1, 2, dan 4" }, { key: "D", text: "2, 3, dan 5" }, { key: "E", text: "3, 4, dan 5" }
+        ],
+        correct: "C", explanation: "Pernyataan ketiga keliru karena ia tidak menjabat rektor UGM dan UII secara bersamaan, melainkan bergantian."
+      },
+      {
+        id: 16, category: "Teks Biografi", stimulus: stimulusSardjito,
+        question: "Mengapa Prof. Dr. Sardjito layak disebut sebagai tokoh pahlawan dengan dedikasi multidimensi?",
+        options: [
+          { key: "A", text: "Menemukan berbagai variasi obat generik khusus untuk masyarakat kalangan menengah ke bawah." },
+          { key: "B", text: "Memiliki rekam jejak panjang sebagai dokter spesialis di berbagai rumah sakit swasta terkenal." },
+          { key: "C", text: "Berperan aktif dalam bidang medis, pendidikan, riset, serta mendukung perjuangan kemerdekaan." },
+          { key: "D", text: "Berhasil meyakinkan masyarakat tentang pentingnya pengobatan modern sejak zaman kolonial." },
+          { key: "E", text: "Diusulkan secara resmi oleh dua universitas besar untuk meraih gelar kehormatan secara nasional." }
+        ],
+        correct: "C", explanation: "Ia berkarya di berbagai disiplin ilmu mulai dari riset sains, pengembangan akademik, hingga logistik perang."
+      },
+      {
+        id: 17, category: "Teks Rekon", stimulus: standaloneText,
+        question: "Apakah yang menjadi ciri utama dari teks rekon faktual?",
+        options: [
+          { key: "A", text: "Memaparkan opini pribadi penulis terhadap fenomena sejarah di masa lampau." },
+          { key: "B", text: "Mengisahkan kronologi kejadian nyata secara objektif berdasarkan fakta lapangan." },
+          { key: "C", text: "Menjabarkan kejadian sejarah yang telah digabungkan dengan cerita imajinatif." },
+          { key: "D", text: "Menggambarkan latar suasana sebuah tempat dengan bahasa yang sangat puitis." },
+          { key: "E", text: "Menceritakan kembali pengalaman emosional penulis yang bersifat sangat subjektif." }
+        ],
+        correct: "B", explanation: "Teks rekon faktual berpedoman pada data, objektivitas, dan runutan waktu yang benar-benar pernah terjadi."
+      },
+      {
+        id: 18, category: "Teks Rekon", stimulus: stimulusBanjir,
+        question: "Apakah ide pokok dari paragraf kedua teks tersebut?",
+        options: [
+          { key: "A", text: "Upaya relawan membantu warga yang terjebak di dalam rumah." },
+          { key: "B", text: "Hujan deras yang terus mengguyur tanpa henti selama tiga hari." },
+          { key: "C", text: "Kepanikan warga saat air setinggi lutut orang dewasa masuk." },
+          { key: "D", text: "Kronologi awal meluapnya air sungai ke permukiman warga." },
+          { key: "E", text: "Peristiwa lumpuhnya arus lalu lintas utama ibu kota akibat banjir." }
+        ],
+        correct: "D", explanation: "Paragraf tersebut memaparkan jam dan proses terjadinya banjir yang meluap ke rumah warga pada hari pertama."
+      },
+      {
+        id: 19, category: "Teks Rekon", stimulus: stimulusBanjir,
+        question: "Bagaimana respons pihak berwenang dalam menangani banjir tersebut?",
+        options: [
+          { key: "A", text: "Mengutamakan perbaikan jalan raya yang mengalami kelumpuhan arus transportasi." },
+          { key: "B", text: "Mengeluarkan imbauan siaga tanpa melakukan intervensi langsung ke lokasi bencana." },
+          { key: "C", text: "Menunggu bantuan peralatan berat dari wilayah lain sebelum mengambil tindakan." },
+          { key: "D", text: "Memantau situasi, melakukan evakuasi warga, serta mendistribusikan bantuan logistik." },
+          { key: "E", text: "Menyerahkan seluruh tanggung jawab keselamatan kepada masing-masing rukun tetangga." }
+        ],
+        correct: "D", explanation: "Otoritas terkait merespons dengan evakuasi fisik, pantauan langsung, dan penyaluran barang kebutuhan pokok."
+      },
+      {
+        id: 20, category: "Teks Biografi", stimulus: stimulusHabibie,
+        question: "Gagasan utama dari paragraf biografi di atas adalah...",
+        options: [
+          { key: "A", text: "Masa jabatan B.J. Habibie sebagai Presiden dan Wakil Presiden RI." },
+          { key: "B", text: "Latar belakang keluarga dan proses pendidikan awal B.J. Habibie." },
+          { key: "C", text: "Kepindahan B.J. Habibie ke Jerman untuk menempuh studi lanjut." },
+          { key: "D", text: "Kecerdasan B.J. Habibie di bidang ilmu fisika dan teknologi." },
+          { key: "E", text: "Durasi perkuliahan B.J. Habibie yang memakan waktu hingga sepuluh tahun." }
+        ],
+        correct: "B", explanation: "Gagasan utamanya terletak pada awal cerita yang memperkenalkan identitas kelahiran dan latar pendidikan."
+      },
+      {
+        id: 21, category: "Teks Biografi", stimulus: stimulusHabibie,
+        question: "Berdasarkan letak kalimat utamanya, paragraf tersebut diklasifikasikan sebagai paragraf...",
+        options: [
+          { key: "A", text: "Campuran" }, { key: "B", text: "Induktif" },
+          { key: "C", text: "Deduktif" }, { key: "D", text: "Naratif" }, { key: "E", text: "Deskriptif" }
+        ],
+        correct: "C", explanation: "Ide atau gagasan pokok yang berada di kalimat pertama merupakan ciri khas paragraf deduktif."
+      },
+      {
+        id: 22, category: "Kaidah Kebahasaan", stimulus: stimulusHabibie,
+        question: "Penggunaan pronomina (kata ganti) orang ketiga tunggal yang merujuk pada B.J. Habibie dalam teks adalah...",
+        options: [
+          { key: "A", text: "Kami" }, { key: "B", text: "Mereka" },
+          { key: "C", text: "Anda" }, { key: "D", text: "Ia" }, { key: "E", text: "Saya" }
+        ],
+        correct: "D", explanation: "Kata ganti persona ketiga tunggal yang tepat untuk merujuk satu sosok tokoh adalah \"ia\" atau \"beliau\"."
+      },
+      {
+        id: 23, category: "Teks Biografi", stimulus: stimulusHabibie,
+        question: "Teks tersebut cenderung dikategorikan sebagai biografi intelektual karena...",
+        options: [
+          { key: "A", text: "Ditulis berdasarkan hasil wawancara reportase langsung." },
+          { key: "B", text: "Menyoroti kehidupan pribadinya dengan sang istri tercinta." },
+          { key: "C", text: "Mengupas detail strategi politiknya saat menjabat sebagai presiden." },
+          { key: "D", text: "Berisi ulasan mendalam mengenai riwayat riset dan pendidikannya." },
+          { key: "E", text: "Mengandung unsur narasi fiksi untuk mendramatisir cerita sejarah." }
+        ],
+        correct: "D", explanation: "Biografi yang menitikberatkan pada pengembangan ilmu pengetahuan, studi, dan pemikiran akademisnya."
+      },
+      {
+        id: 24, category: "Teks Negosiasi", stimulus: stimulusSuratDialog,
+        question: "Pada Teks A, kalimat \"Adapun hal-hal yang ingin kami diskusikan adalah terkait dengan syarat-syarat kontrak...\" berada pada tahapan struktur...",
+        options: [
+          { key: "A", text: "Orientasi" }, { key: "B", text: "Pemenuhan" },
+          { key: "C", text: "Pengajuan" }, { key: "D", text: "Persetujuan" }, { key: "E", text: "Penutup" }
+        ],
+        correct: "C", explanation: "Kalimat tersebut mengawali pembicaraan ke arah penawaran poin-poin yang bisa dinegosiasikan lebih lanjut."
+      },
+      {
+        id: 25, category: "Teks Negosiasi", stimulus: stimulusSuratDialog,
+        question: "Surat penawaran kerja sama pada Teks A berfungsi sebagai instrumen bisnis yang berguna untuk...",
+        options: [
+          { key: "A", text: "Menegur rekan bisnis yang menyalahi prosedur operasional resmi." },
+          { key: "B", text: "Mengingatkan agenda pertemuan tahunan antara dua perusahaan." },
+          { key: "C", text: "Menjadi wakil tertulis perusahaan dalam menyampaikan maksud niaga." },
+          { key: "D", text: "Menyelesaikan perselisihan hukum terkait sengketa wilayah industri." },
+          { key: "E", text: "Memberikan instruksi kerja kepada karyawan baru di instansi tersebut." }
+        ],
+        correct: "C", explanation: "Surat resmi tersebut bertindak sebagai representasi pihak pengirim untuk menawarkan urusan perniagaan."
+      },
+      {
+        id: 26, category: "Teks Negosiasi", stimulus: stimulusSuratDialog,
+        question: "Pada Teks B, kalimat interogatif manakah yang mengarahkan pembicaraan masuk ke tahap penawaran inti?",
+        options: [
+          { key: "A", text: "\"Bagaimana kabarnya, Pak? Sehat?\"" },
+          { key: "B", text: "\"Jarang-jarang, lo Bapak main ke sini. Ada apa ya, Pak?\"" },
+          { key: "C", text: "\"Wah, lumayan juga, Pak.\"" },
+          { key: "D", text: "\"Rumah ini harganya berapa, Pak?\"" },
+          { key: "E", text: "\"Bapak Roni tertarik dengan rumah ini, Pak.\"" }
+        ],
+        correct: "D", explanation: "Pertanyaan tersebut menandai bahwa pembeli siap masuk ke tahap perundingan harga barang."
+      },
+      {
+        id: 27, category: "Teks Negosiasi", stimulus: stimulusSuratDialog,
+        question: "Sapaan formal yang dominan dipakai pada Teks B untuk menunjukkan kesantunan adalah...",
+        options: [
+          { key: "A", text: "Anda" }, { key: "B", text: "Pak" },
+          { key: "C", text: "Saudara" }, { key: "D", text: "Beliau" }, { key: "E", text: "Kami" }
+        ],
+        correct: "B", explanation: "Penyebutan \"Pak\" secara berulang membuktikan adanya kesantunan dalam interaksi dua pihak."
+      },
+      {
+        id: 28, category: "Teks Negosiasi", stimulus: stimulusSuratDialog,
+        question: "Perbedaan karakteristik bahasa antara Teks A dan Teks B sangat terlihat pada penggunaan...",
+        options: [
+          { key: "A", text: "Teks A menggunakan bahasa naratif, Teks B menggunakan tata bahasa deskriptif." },
+          { key: "B", text: "Teks A memakai struktur orientasi panjang, Teks B langsung menuju ke inti materi." },
+          { key: "C", text: "Teks A menggunakan bahasa tulis formal searah, Teks B memakai dialog berpasangan." },
+          { key: "D", text: "Teks A memfokuskan tawar menawar di awal, Teks B fokus pada persetujuan final." },
+          { key: "E", text: "Teks A tidak mengandung kalimat bujukan, Teks B sarat akan diksi persuasif tajam." }
+        ],
+        correct: "C", explanation: "Surat bersifat naratif searah dan kaku, sementara dialog berjalan dua arah dan lebih dinamis."
+      },
+      {
+        id: 29, category: "Teks Negosiasi", stimulus: stimulusSuratDialog,
+        question: "Kalimat Bapak Acong mengenai luas tanah dan kondisi rumah yang baru direnovasi berfungsi untuk...",
+        options: [
+          { key: "A", text: "Menyampaikan perintah mutlak sebelum transaksi." },
+          { key: "B", text: "Mengakhiri negosiasi karena barang sudah sempurna." },
+          { key: "C", text: "Memberikan dasar logis guna mendukung harga yang diajukan." },
+          { key: "D", text: "Membuka topik pembicaraan baru yang tidak terkait properti." },
+          { key: "E", text: "Menyatakan persetujuan akhir dari pihak yang memiliki wewenang." }
+        ],
+        correct: "C", explanation: "Penjelasan kondisi barang digunakan untuk menjustifikasi harga mahal yang akan ia tawarkan kepada pembeli."
+      },
+      {
+        id: 30, category: "Teks Rekon", stimulus: stimulusGambyong,
+        question: "Teks yang membahas ragam kesenian beserta historinya secara nyata di atas digolongkan sebagai...",
+        options: [
+          { key: "A", text: "Rekon pribadi" }, { key: "B", text: "Biografi jurnalistik" },
+          { key: "C", text: "Teks negosiasi naratif" }, { key: "D", text: "Rekon faktual" }, { key: "E", text: "Rekon imajinatif" }
+        ],
+        correct: "D", explanation: "Uraian fakta kejadian dan tradisi budaya yang ada di dunia nyata tergolong jenis teks rekon faktual."
+      },
+      {
+        id: 31, category: "Teks Rekon", stimulus: stimulusGambyong,
+        question: "Paragraf pertama yang memuat definisi dasar dan lokasi asal mula tarian menempati bagian struktur...",
+        options: [
+          { key: "A", text: "Resolusi" }, { key: "B", text: "Orientasi" },
+          { key: "C", text: "Reorientasi" }, { key: "D", text: "Komplikasi" }, { key: "E", text: "Urutan Peristiwa" }
+        ],
+        correct: "B", explanation: "Pemaparan tentang konsep umum dan asal-usul di awal teks merupakan bagian dari struktur orientasi."
+      },
+      {
+        id: 32, category: "Teks Rekon", stimulus: stimulusGambyong,
+        question: "Paragraf kedua teks di atas lebih banyak menjelaskan tentang...",
+        options: [
+          { key: "A", text: "Kosmologi kebudayaan yang ada di sekitar keraton." },
+          { key: "B", text: "Dinamika persaingan antara tari modern dan tari lokal." },
+          { key: "C", text: "Faktor penyebab menurunnya minat generasi muda menari." },
+          { key: "D", text: "Proses adaptasi kebiasaan adat turun-temurun di Surakarta." },
+          { key: "E", text: "Fungsi penyambutan tari Gambyong dan pola gerak dasarnya." }
+        ],
+        correct: "E", explanation: "Fokus utama ada pada siapa tarian ini ditujukan dan bagaimana ritme gerak tubuh penarinya."
+      },
+      {
+        id: 33, category: "Kaidah Kebahasaan", stimulus: stimulusGambyong,
+        question: "Dilihat dari sifat informasinya, kalimat \"Seni tari adalah sebuah seni yang mempelajari tentang gerakan tubuh yang berirama...\" termasuk jenis kalimat...",
+        options: [
+          { key: "A", text: "Imperatif" }, { key: "B", text: "Interogatif" },
+          { key: "C", text: "Deklaratif" }, { key: "D", text: "Persuasif" }, { key: "E", text: "Esklamatif" }
+        ],
+        correct: "C", explanation: "Deklaratif merupakan kalimat penyataan yang berisi fakta atau informasi jelas tanpa unsur tanya/perintah."
+      },
+      {
+        id: 34, category: "Kaidah Kebahasaan", stimulus: stimulusGambyong,
+        question: "Kata \"adaptasi\" dalam teks di atas diserap ke dalam bahasa Indonesia melalui proses...",
+        options: [
+          { key: "A", text: "Adopsi tanpa mengubah bentuk dasar katanya." },
+          { key: "B", text: "Penyesuaian ejaan dan pelafalan dari bahasa asal." },
+          { key: "C", text: "Penerjemahan makna secara harfiah ke bahasa lokal." },
+          { key: "D", text: "Penggabungan dua istilah serapan yang berbeda asal." },
+          { key: "E", text: "Pembuatan akronim dari istilah akademis budaya." }
+        ],
+        correct: "B", explanation: "Serapan adaptasi merujuk pada kosakata luar yang disesuaikan pelafalannya menurut lidah lokal."
+      },
+      {
+        id: 35, category: "Kaidah Kebahasaan", stimulus: stimulusSardjito2,
+        question: "Teks di atas banyak memuat verba material. Kata berikut yang BUKAN merupakan verba material adalah...",
+        options: [
+          { key: "A", text: "Menciptakan" }, { key: "B", text: "Membantu" },
+          { key: "C", text: "Mencatat" }, { key: "D", text: "Menekankan" }, { key: "E", text: "Menjual" }
+        ],
+        correct: "D", explanation: "Kata tersebut lebih berkaitan dengan aktivitas pikiran atau sikap psikologis, bukan gerakan fisik yang nyata."
+      },
+      {
+        id: 36, category: "Teks Biografi", stimulus: stimulusSardjito2,
+        question: "Pemaparan sumbangsih tokoh dalam membantu pejuang di medan perang masuk dalam tahapan struktur...",
+        options: [
+          { key: "A", text: "Koda penutup" }, { key: "B", text: "Reorientasi" },
+          { key: "C", text: "Orientasi awal" }, { key: "D", text: "Abstrak cerita" }, { key: "E", text: "Urutan peristiwa" }
+        ],
+        correct: "E", explanation: "Aksi tersebut adalah wujud kiprah sang tokoh dalam perjalanan kronologis hidupnya."
+      },
+      {
+        id: 37, category: "Teks Biografi", stimulus: stimulusSardjito2,
+        question: "Nilai keteladanan yang mencolok dari ucapan \"Tidak boleh menjual obat ini mahal-mahal. Obat ini untuk rakyat\" adalah sifat...",
+        options: [
+          { key: "A", text: "Kritis pada pemerintah." }, { key: "B", text: "Ambisius dalam berkarir." },
+          { key: "C", text: "Tekun melakukan penelitian." }, { key: "D", text: "Nasionalis dan pro-rakyat." }, { key: "E", text: "Berani berdebat di muka umum." }
+        ],
+        correct: "D", explanation: "Memprioritaskan keterjangkauan harga demi rakyat menunjukkan tingginya kepedulian sosial sang tokoh."
+      },
+      {
+        id: 38, category: "Kaidah Kebahasaan", stimulus: stimulusSardjito2,
+        question: "Tanda petik ganda (\"...\") pada kutipan kalimat Prof. Sardjito dalam teks di atas memiliki fungsi untuk...",
+        options: [
+          { key: "A", text: "Mengapit ragam istilah medis yang sulit dipahami." },
+          { key: "B", text: "Memisahkan rincian kalimat yang cukup panjang." },
+          { key: "C", text: "Mengapit petikan langsung dari tuturan tokoh." },
+          { key: "D", text: "Menunjukkan singkatan atau akronim akademis." },
+          { key: "E", text: "Mengapit judul buku atau jurnal hasil risetnya." }
+        ],
+        correct: "C", explanation: "Tanda petik tersebut membingkai tuturan otentik yang secara langsung diucapkan oleh tokoh."
+      },
+      {
+        id: 39, category: "Teks Biografi", stimulus: stimulusSardjito2,
+        question: "Kalimat pertama pada paragraf kedua merupakan gagasan pokok paragraf tersebut. Hal ini menandakan paragraf berjenis...",
+        options: [
+          { key: "A", text: "Induktif" }, { key: "B", text: "Campuran" },
+          { key: "C", text: "Deduktif" }, { key: "D", text: "Naratif murni" }, { key: "E", text: "Persuasif" }
+        ],
+        correct: "C", explanation: "Kalimat pokok di awal yang kemudian dirinci oleh kalimat penjelas mengindikasikan pola deduktif."
+      },
+      {
+        id: 40, category: "Teks Biografi", stimulus: standaloneText,
+        question: "Setelah penulis biografi mencari dan mengumpulkan data profil tokoh, langkah krusial berikutnya yang harus diambil adalah...",
+        options: [
+          { key: "A", text: "Memilah dan menyeleksi data yang relevan dengan tujuan biografi." },
+          { key: "B", text: "Menyusun karangan bebas imajinatif untuk mempercantik tulisan." },
+          { key: "C", text: "Menentukan teknik publikasi naskah di berbagai platform media." },
+          { key: "D", text: "Melakukan perbaikan atau penyuntingan tata bahasa secara total." },
+          { key: "E", text: "Mewawancarai tokoh pendukung lainnya tanpa menyusun naskah." }
+        ],
+        correct: "A", explanation: "Begitu data terkumpul, penulis wajib menyeleksi mana yang paling penting dan relevan sebelum mulai merangkainya."
+      }
+    ];
+
+    // --- DATA SOAL URAIAN (5 SOAL) ---
+    // Soal Uraian dipertahankan sebagai latihan tambahan karena tidak disediakan di PDF
+    const essaysData = [
+      {
+        id: 1, category: "Menulis & Evaluasi",
+        question: "Sebutkan dan jelaskan secara singkat struktur teks biografi yang runtut!",
+        answerHTML: "<ul class='list-decimal pl-5 space-y-1'><li><strong>Orientasi:</strong> Pengenalan tokoh, latar belakang keluarga, tempat/tanggal lahir.</li><li><strong>Peristiwa Penting (Urutan Peristiwa):</strong> Rangkaian perjalanan hidup, rintangan, dan puncak kesuksesan/kontribusi tokoh yang disusun kronologis.</li><li><strong>Reorientasi:</strong> Kesimpulan atau pandangan penulis mengenai tokoh (opsional/bisa ada atau tidak).</li></ul>"
+      },
+      {
+        id: 2, category: "Analisis Kebahasaan",
+        question: "Terdapat kalimat negosiasi yang rumpang: \nPembeli: 'Harga tas ini 500 ribu ya, Bu? Terlalu mahal untuk anak sekolah seperti saya.'\nPenjual: '[...Lengkapi bagian ini dengan kalimat penawaran yang bersifat persuasif dan santun...]' \nLengkapilah dialog penjual di atas!",
+        answerHTML: "<p>\"Wah, kalau Rp500 ribu memang belum dapet, Bu. Tapi khusus untuk anak sekolah yang rajin seperti adik, saya kasih diskon jadi Rp420 ribu saja, bagaimana? Bahannya tebal dan awet lho untuk bawa buku banyak.\" <em>(Atau kalimat sejenis yang mengandung penolakan halus, penawaran harga baru, dan bujukan/alasan logis).</em></p>"
+      },
+      {
+        id: 3, category: "Ide Pokok & Jenis Paragraf",
+        question: "Jelaskan perbedaan antara paragraf Deduktif dan paragraf Induktif dalam penyajian ide pokok teks biografi!",
+        answerHTML: "<p><strong>Paragraf Deduktif:</strong> Gagasan pokok/kalimat utamanya terletak di AWAL paragraf, lalu diikuti kalimat-kalimat penjelas.<br/><strong>Paragraf Induktif:</strong> Dimulai dengan kalimat-kalimat penjelas/rincian, lalu diakhiri dengan kesimpulan yang merupakan gagasan pokok di AKHIR paragraf.</p>"
+      },
+      {
+        id: 4, category: "Menyunting Ejaan & Tanda Baca",
+        question: "Perbaikilah penulisan ejaan dan tanda baca pada kalimat berikut ini: \nkata pak kades kita harus melestarikan budaya lokal, jadi pemuda harus ikut berlatih tari.",
+        answerHTML: "<p>Kata Pak Kades, \"Kita harus melestarikan budaya lokal. Jadi, pemuda harus ikut berlatih tari.\" <br/><br/><em>(Perbaikan meliputi: Kapital pada awal kalimat 'Kata', kapital untuk sapaan 'Pak Kades', penggunaan koma dan tanda petik ganda untuk kutipan langsung, serta kapitalisasi awal kutipan langsung).</em></p>"
+      },
+      {
+        id: 5, category: "Kata Serapan",
+        question: "Jelaskan apa yang dimaksud dengan proses penyerapan kata bahasa asing melalui cara 'Adaptasi' dan berikan dua (2) contoh katanya!",
+        answerHTML: "<p><strong>Adaptasi</strong> adalah proses penyerapan kata asing dimana maknanya diambil sama dengan bahasa aslinya, namun penulisan dan pengucapannya disesuaikan dengan kaidah Ejaan Bahasa Indonesia (EBI).<br/><strong>Contoh:</strong> <em>System</em> menjadi <strong>Sistem</strong>, <em>Maximal</em> menjadi <strong>Maksimal</strong>, <em>Organization</em> menjadi <strong>Organisasi</strong>.</p>"
+      }
+    ];
+
+    // --- STATE VARIABLES ---
+    let currentQIndex = 0;
+    let score = 0;
+    let selectedAnswer = null;
+    let isAnswered = false;
+    let showEssayAnswer = false;
+
+    // --- DOM ELEMENTS ---
+    const screens = {
+      start: document.getElementById('screen-start'),
+      quiz: document.getElementById('screen-quiz'),
+      result: document.getElementById('screen-result'),
+      essay: document.getElementById('screen-essay')
+    };
+
+    // Quiz Elements
+    const elCategory = document.getElementById('quiz-category');
+    const elProgressText = document.getElementById('quiz-progress-text');
+    const elProgressBar = document.getElementById('quiz-progress-bar');
+    const elStimulus = document.getElementById('quiz-stimulus');
+    const elQuestion = document.getElementById('quiz-question');
+    const elOptions = document.getElementById('quiz-options');
+    const elFeedbackContainer = document.getElementById('quiz-feedback-container');
+    const elFeedbackBox = document.getElementById('quiz-feedback-box');
+    const elFeedbackIcon = document.getElementById('quiz-feedback-icon');
+    const elFeedbackTitle = document.getElementById('quiz-feedback-title');
+    const elFeedbackText = document.getElementById('quiz-feedback-text');
+    const elNextBtn = document.getElementById('quiz-next-btn');
+
+    // Result Elements
+    const elResultScore = document.getElementById('result-score');
+    const elResultCorrect = document.getElementById('result-correct');
+    const elResultTotal = document.getElementById('result-total');
+    const elResultMessage = document.getElementById('result-message');
+    const elResultCircle = document.getElementById('result-circle');
+
+    // Essay Elements
+    const elEssayContainer = document.getElementById('essay-container');
+    const elEssayToggleBtn = document.getElementById('essay-toggle-btn');
+
+    // --- FUNCTIONS ---
+    function showScreen(screenName) {
+      Object.values(screens).forEach(s => s.classList.add('hidden'));
+      screens[screenName].classList.remove('hidden');
+      window.scrollTo(0, 0);
+    }
+
+    function startQuiz() {
+      currentQIndex = 0;
+      score = 0;
+      selectedAnswer = null;
+      isAnswered = false;
+      showScreen('quiz');
+      renderQuestion();
+    }
+
+    function renderQuestion() {
+      const q = questionsData[currentQIndex];
+      const progressPercent = ((currentQIndex + 1) / questionsData.length) * 100;
+
+      elCategory.textContent = q.category;
+      elProgressText.textContent = `Soal ${currentQIndex + 1} / ${questionsData.length}`;
+      elProgressBar.style.width = `${progressPercent}%`;
+      elStimulus.textContent = q.stimulus;
+      elQuestion.textContent = q.question;
+      
+      elNextBtn.innerHTML = currentQIndex === questionsData.length - 1 
+        ? `Selesaikan Pilihan Ganda <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>`
+        : `Soal Berikutnya <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>`;
+
+      renderOptions();
+      elFeedbackContainer.classList.add('hidden');
+    }
+
+    function renderOptions() {
+      const q = questionsData[currentQIndex];
+      elOptions.innerHTML = '';
+
+      q.options.forEach(opt => {
+        const btn = document.createElement('button');
+        
+        let btnClass = "w-full text-left p-4 rounded-xl border border-slate-600 bg-slate-700/40 hover:bg-indigo-600/20 transition duration-200 flex items-start gap-4";
+        let letterClass = "flex-shrink-0 w-8 h-8 rounded-full bg-slate-600 text-white flex items-center justify-center font-bold text-sm";
+        
+        if (!isAnswered) {
+          btn.style.cursor = "pointer";
+          btn.onclick = () => selectOption(opt.key);
+        } else {
+          btn.disabled = true;
+          btnClass = "w-full text-left p-4 rounded-xl border flex items-start gap-4 opacity-60";
+          
+          if (opt.key === q.correct) {
+            btnClass = "w-full text-left p-4 rounded-xl border border-emerald-500 bg-emerald-900/40 flex items-start gap-4";
+            letterClass = "flex-shrink-0 w-8 h-8 rounded-full bg-emerald-500 text-white flex items-center justify-center font-bold text-sm";
+          } else if (opt.key === selectedAnswer && selectedAnswer !== q.correct) {
+            btnClass = "w-full text-left p-4 rounded-xl border border-rose-500 bg-rose-900/40 flex items-start gap-4";
+            letterClass = "flex-shrink-0 w-8 h-8 rounded-full bg-rose-500 text-white flex items-center justify-center font-bold text-sm";
+          }
+        }
+
+        btn.className = btnClass;
+        btn.innerHTML = `
+          <span class="${letterClass}">${opt.key}</span>
+          <span class="pt-1 text-slate-200">${opt.text}</span>
+        `;
+        elOptions.appendChild(btn);
+      });
+    }
+
+    function selectOption(key) {
+      if (isAnswered) return;
+      isAnswered = true;
+      selectedAnswer = key;
+
+      const q = questionsData[currentQIndex];
+      const isCorrect = (key === q.correct);
+
+      if (isCorrect) score++;
+
+      renderOptions(); // Re-render to show colors
+      showFeedback(isCorrect, q.explanation);
+    }
+
+    function showFeedback(isCorrect, explanation) {
+      elFeedbackContainer.classList.remove('hidden');
+      
+      if (isCorrect) {
+        elFeedbackBox.className = "p-6 rounded-2xl border bg-emerald-900/30 border-emerald-500/50 text-emerald-100 mb-6";
+        elFeedbackIcon.innerHTML = `<svg class="w-7 h-7 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>`;
+        elFeedbackTitle.textContent = "Jawaban Kamu Tepat!";
+      } else {
+        elFeedbackBox.className = "p-6 rounded-2xl border bg-rose-900/30 border-rose-500/50 text-rose-100 mb-6";
+        elFeedbackIcon.innerHTML = `<svg class="w-7 h-7 text-rose-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>`;
+        elFeedbackTitle.textContent = "Jawaban Kamu Kurang Tepat";
+      }
+
+      elFeedbackText.innerHTML = `<strong class="font-semibold">Pembahasan:</strong> ${explanation}`;
+    }
+
+    function handleNextQuestion() {
+      if (currentQIndex < questionsData.length - 1) {
+        currentQIndex++;
+        selectedAnswer = null;
+        isAnswered = false;
+        renderQuestion();
+      } else {
+        showResultScreen();
+      }
+    }
+
+    function showResultScreen() {
+      const total = questionsData.length;
+      const finalScore = Math.round((score / total) * 100);
+      
+      elResultScore.textContent = finalScore;
+      elResultCorrect.textContent = score;
+      elResultTotal.textContent = total;
+      
+      elResultCircle.setAttribute('stroke-dasharray', `${finalScore}, 100`);
+
+      if (finalScore >= 80) {
+        elResultMessage.textContent = "Luar biasa! Pemahaman literasimu sangat mantap.";
+      } else if (finalScore >= 60) {
+        elResultMessage.textContent = "Kerja bagus! Sedikit lagi menguasai materi ini.";
+      } else {
+        elResultMessage.textContent = "Terus semangat belajar! Yuk pelajari lagi struktur dan kaidah kebahasaannya.";
+      }
+
+      showScreen('result');
+    }
+
+    function goToEssay() {
+      showEssayAnswer = false;
+      renderEssays();
+      showScreen('essay');
+    }
+
+    function renderEssays() {
+      elEssayToggleBtn.textContent = showEssayAnswer ? 'Sembunyikan Kunci Jawaban' : 'Lihat Kunci Jawaban';
+      elEssayContainer.innerHTML = '';
+
+      essaysData.forEach((essay, index) => {
+        const div = document.createElement('div');
+        div.className = "bg-slate-800 border border-slate-700 rounded-xl p-6 md:p-8 shadow-md";
+        
+        let answerBlock = '';
+        if (showEssayAnswer) {
+          answerBlock = `
+            <div class="mt-6 p-5 bg-indigo-900/20 border border-indigo-500/30 rounded-lg animate-fade-in-up">
+              <h4 class="font-bold text-indigo-300 mb-2 flex items-center gap-2">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                Referensi Jawaban:
+              </h4>
+              <div class="text-slate-300 text-sm md:text-base space-y-2">
+                ${essay.answerHTML}
+              </div>
+            </div>
+          `;
+        }
+
+        div.innerHTML = `
+          <div class="flex gap-4">
+            <div class="flex-shrink-0 w-10 h-10 rounded-full bg-slate-700 flex items-center justify-center font-bold text-indigo-300">
+              ${index + 1}
+            </div>
+            <div class="w-full">
+              <span class="text-xs font-semibold text-purple-400 uppercase tracking-wider mb-2 block">${essay.category}</span>
+              <p class="text-lg leading-relaxed text-slate-100 whitespace-pre-wrap">${essay.question}</p>
+              
+              <div class="mt-4">
+                <textarea class="w-full bg-slate-900 border border-slate-600 rounded-lg p-4 text-slate-200 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 placeholder-slate-500 min-h-[120px]" placeholder="Ketik jawaban kamu di sini untuk latihan mandiri..."></textarea>
+              </div>
+              
+              ${answerBlock}
+            </div>
+          </div>
+        `;
+        
+        elEssayContainer.appendChild(div);
+      });
+    }
+
+    function toggleEssayAnswers() {
+      showEssayAnswer = !showEssayAnswer;
+      renderEssays();
+    }
+
+    function goHome() {
+      showScreen('start');
+    }
+  </script>
+</body>
+</html>
